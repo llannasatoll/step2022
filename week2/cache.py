@@ -21,7 +21,6 @@ class Cache:
     self.list = DoublyLinkedList()
     self.cache = {}
     self.num_of_empty = n
-    pass
 
   # Access a page and update the cache so that it stores the most
   # recently accessed N pages. This needs to be done with mostly O(1).
@@ -29,17 +28,15 @@ class Cache:
   # |contents|: The contents of the URL
   def access_page(self, url, contents):
     if url in self.cache:
-      _ = self.list.delete(self.cache[url])
+      old = self.list.delete(self.cache[url])
       self.cache[url] = self.list.insert(url, contents)
     else: 
-      self.cache[url] = self.list.insert(url, contents)
       if self.num_of_empty < 1:
         oldest_url = self.list.delete(self.list.tail.prev)
         del self.cache[oldest_url]
         self.num_of_empty += 1
-      
+      self.cache[url] = self.list.insert(url, contents)
       self.num_of_empty -= 1
-    pass
 
   # Return the URLs stored in the cache. The URLs are ordered
   # in the order in which the URLs are mostly recently accessed.
@@ -82,13 +79,14 @@ class DoublyLinkedList:
   # Delete the node.
   # Return the URL that the node had.
   def delete(self, node):
-    if node == self.head:
-      print("List is empty.")
+    if node.next is None and node.prev is None:
       return None
     else:
       node.prev.next = node.next
       node.next.prev = node.prev
-      return node.url
+      url = node.url
+      del node
+      return url
       
 
 # Does your code pass all test cases? :)
