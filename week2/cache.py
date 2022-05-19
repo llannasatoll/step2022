@@ -6,6 +6,7 @@ step2022 -week2-
 """
 
 import sys
+import time
 
 # Cache is a data structure that stores the most recently accessed N pages.
 # See the below test cases to see how it should work.
@@ -19,24 +20,26 @@ class Cache:
   def __init__(self, n):
     self.n = n
     self.list = DoublyLinkedList()
-    self.cache = {}
-    self.num_of_empty = n
+    self.url_to_contents = {}
 
   # Access a page and update the cache so that it stores the most
   # recently accessed N pages. This needs to be done with mostly O(1).
   # |url|: The accessed URL
   # |contents|: The contents of the URL
   def access_page(self, url, contents):
-    if url in self.cache:
-      old = self.list.delete(self.cache[url])
-      self.cache[url] = self.list.insert(url, contents)
+    if url in self.url_to_contents:
+      node = self.url_to_contents[url]
+      self.list.delete(node)
+      self.list.insert(node)
     else: 
-      if self.num_of_empty < 1:
-        oldest_url = self.list.delete(self.list.tail.prev)
-        del self.cache[oldest_url]
-        self.num_of_empty += 1
-      self.cache[url] = self.list.insert(url, contents)
-      self.num_of_empty -= 1
+      if len(self.url_to_contents) >= self.n:
+        tail_node = self.list.tail.prev
+        self.list.delete(tail_node)
+        del self.url_to_contents[tail_node.url]
+
+      new_node = Node(url, contents)
+      self.list.insert(new_node)
+      self.url_to_contents[url] = new_node
 
   # Return the URLs stored in the cache. The URLs are ordered
   # in the order in which the URLs are mostly recently accessed.
@@ -68,26 +71,20 @@ class DoublyLinkedList:
     
   # Insert a node that has the URL and the contents at the beginning of the list.
   # Return the node.
-  def insert(self, url, contents):
-    new = Node(url, contents)
-    new.next = self.head.next
-    self.head.next.prev = new
-    self.head.next = new
-    new.prev = self.head 
-    return new
- 
+  def insert(self, newnode):
+    newnode.next = self.head.next
+    self.head.next.prev = newnode
+    self.head.next = newnode
+    newnode.prev = self.head 
+
   # Delete the node.
   # Return the URL that the node had.
   def delete(self, node):
     if node.next is None and node.prev is None:
-      return None
+      pass
     else:
       node.prev.next = node.next
       node.next.prev = node.prev
-      url = node.url
-      del node
-      return url
-      
 
 # Does your code pass all test cases? :)
 def cache_test():
@@ -160,5 +157,22 @@ def equal(list1, list2):
   #print("list2 : ", list2)
   assert(list1 == list2)
 
+def cache_test2(n):
+  cache = Cache(n)
+
+  begin = time.time()
+  for i in range(100000):
+    cache.access_page(str(0)+".com", chr(0))
+    cache.access_page(str(i)+".com", chr(i))
+  end = time.time()
+
+  print("time : ", end - begin)
+
 if __name__ == "__main__":
+  if len(sys.argv) != 2:
+    print("usage: %s [cache size]" % sys.argv[0])
+    exit(1)
+    
   cache_test()
+  cache_test2(int(sys.argv[1]))
+
