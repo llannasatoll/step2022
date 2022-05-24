@@ -57,7 +57,7 @@ def tokenize(line):
   return tokens
 
 
-def remove_tokenlist(tokens, index):
+def remove_caluculated(tokens, index):
   tokens.pop(index)
   tokens.pop(index)
 
@@ -68,12 +68,12 @@ def evaluate_minus(tokens):
     if tokens[index]["type"] == "MINUS":
       if not (tokens[index-1]["type"] == "NUMBER"):
         tokens.insert(index, {'type': 'NUMBER', 'number': -1*tokens[index+1]["number"]})
-        removelist(tokens, index+1)
+        remove_caluculated(tokens, index+1)
     index += 1
   return tokens
 
 
-def evaluate_times_divied(tokens):
+def evaluate_multiply_divied(tokens):
   index = 1
   while index < len(tokens):
     if tokens[index]['type'] == 'TIMES':
@@ -84,11 +84,11 @@ def evaluate_times_divied(tokens):
       index += 1
       continue
     tokens[index-1]['number'] = tmp
-    removelist(tokens, index)
+    remove_caluculated(tokens, index)
   return tokens
 
 
-def evaluate_plus_minus(tokens):
+def evaluate_add_subtract(tokens):
   answer = 0
   index = 1
   while index < len(tokens):
@@ -108,7 +108,8 @@ def evaluate(line):
   tokens = tokenize(line)
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
   tokens = evaluate_minus(tokens)
-  actual_answer = evaluate_plus_minus(evaluate_times_divied(tokens))
+  tokens = evaluate_multiply_divied(tokens)
+  actual_answer = evaluate_add_subtract(tokens)
   return actual_answer
 
 
@@ -136,9 +137,11 @@ def test(line):
 # Add more tests to this function :)
 def run_test():
   print("==== Test started! ====")
+  test("3")
   test("1+2")
   test("1.0+2.1-3")
   test("2*3")
+  test("2*10*3/2/5")
   test("1.0*2-3.2/4+1")
   test("(1+2)")
   test("(1+(2*3))-(2.0/4)")
