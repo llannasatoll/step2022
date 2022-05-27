@@ -8,30 +8,31 @@ def read_number(line, index):
   while index < len(line) and line[index].isdigit():
     number = number * 10 + int(line[index])
     index += 1
-  if index < len(line) and line[index] == '.':
+  if index < len(line) and line[index] == ".":
     index += 1
     decimal = 0.1
     while index < len(line) and line[index].isdigit():
       number += int(line[index]) * decimal
       decimal /= 10
       index += 1
-  token = {'type': 'NUMBER', 'number': number}
+
+  token = {"type": "NUMBER", "number": number}
   return token, index
 
 def read_plus(line, index):
-  token = {'type': 'PLUS'}
+  token = {"type": "PLUS"}
   return token, index + 1
 
 def read_minus(line, index):
-  token = {'type': 'MINUS'}
+  token = {"type": "MINUS"}
   return token, index + 1
 
 def read_times(line, index):
-  token = {'type': 'TIMES'}
+  token = {"type": "TIMES"}
   return token, index + 1
 
 def read_divide(line, index):
-  token = {'type': 'DIVIDE'}
+  token = {"type": "DIVIDE"}
   return token, index + 1
 
 
@@ -41,16 +42,16 @@ def tokenize(line):
   while index < len(line):
     if line[index].isdigit():
       (token, index) = read_number(line, index)
-    elif line[index] == '+':
+    elif line[index] == "+":
       (token, index) = read_plus(line, index)
-    elif line[index] == '-':
+    elif line[index] == "-":
       (token, index) = read_minus(line, index)
-    elif line[index] == '*':
+    elif line[index] == "*":
       (token, index) = read_times(line, index)
-    elif line[index] == '/':
+    elif line[index] == "/":
       (token, index) = read_divide(line, index)
     else:
-      print('Invalid character found: ' + line[index])
+      print("Invalid character found: " + line[index])
       exit(1)
     tokens.append(token)
 
@@ -67,23 +68,23 @@ def evaluate_minus(tokens):
   while index < len(tokens):
     if tokens[index]["type"] == "MINUS":
       if not (tokens[index-1]["type"] == "NUMBER"):
-        tokens.insert(index, {'type': 'NUMBER', 'number': -1*tokens[index+1]["number"]})
+        tokens.insert(index, {"type": "NUMBER", "number": -1*tokens[index+1]["number"]})
         remove_caluculated(tokens, index+1)
     index += 1
   return tokens
 
 
-def evaluate_multiply_divied(tokens):
+def evaluate_multiply_divide(tokens):
   index = 1
   while index < len(tokens):
-    if tokens[index]['type'] == 'TIMES':
-      tmp = tokens[index-1]['number'] * tokens[index+1]['number']
-    elif tokens[index]['type'] == 'DIVIDE':
-      tmp = tokens[index-1]['number'] / tokens[index+1]['number']
+    if tokens[index]["type"] == "TIMES":
+      tmp = tokens[index-1]["number"] * tokens[index+1]["number"]
+    elif tokens[index]["type"] == "DIVIDE":
+      tmp = tokens[index-1]["number"] / tokens[index+1]["number"]
     else:
       index += 1
       continue
-    tokens[index-1]['number'] = tmp
+    tokens[index-1]["number"] = tmp
     remove_caluculated(tokens, index)
   return tokens
 
@@ -92,13 +93,13 @@ def evaluate_add_subtract(tokens):
   answer = 0
   index = 1
   while index < len(tokens):
-    if tokens[index]['type'] == 'NUMBER':
-      if tokens[index - 1]['type'] == 'PLUS':
-        answer += tokens[index]['number']
-      elif tokens[index - 1]['type'] == 'MINUS':
-        answer -= tokens[index]['number']
+    if tokens[index]["type"] == "NUMBER":
+      if tokens[index - 1]["type"] == "PLUS":
+        answer += tokens[index]["number"]
+      elif tokens[index - 1]["type"] == "MINUS":
+        answer -= tokens[index]["number"]
       else:
-        print('Invalid syntax')
+        print("Invalid syntax")
         exit(1)
     index += 1
   return answer
@@ -106,9 +107,9 @@ def evaluate_add_subtract(tokens):
 
 def evaluate(line):
   tokens = tokenize(line)
-  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+  tokens.insert(0, {"type": "PLUS"}) # Insert a dummy "+" token
   tokens = evaluate_minus(tokens)
-  tokens = evaluate_multiply_divied(tokens)
+  tokens = evaluate_multiply_divide(tokens)
   actual_answer = evaluate_add_subtract(tokens)
   return actual_answer
 
@@ -138,12 +139,21 @@ def test(line):
 def run_test():
   print("==== Test started! ====")
   test("3")
+  test("-2")
   test("1+2")
-  test("1.0+2.1-3")
   test("2*3")
+  test("2/3")
+  test("3.0")
+  test("-2.0")
+  test("1.0+2.0")
+  test("2.0*3.0")
+  test("2.0/3.0")
+  test("1.0+2.1-3")
   test("2*10*3/2/5")
   test("1.0*2-3.2/4+1")
   test("(1+2)")
+  test("-4+2.0")
+  test("1+(-2*3)")
   test("(1+(2*3))-(2.0/4)")
   test("2+2*3/(1-3.0)")
   print("==== Test finished! ====\n")
@@ -151,7 +161,7 @@ def run_test():
 run_test()
 
 while True:
-  print('> ', end="")
+  print("> ", end="")
   line = input()
   answer = my_calculator(line)
   print("answer = %f\n" % answer)
