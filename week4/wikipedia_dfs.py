@@ -3,7 +3,7 @@ step2022 -week4-
 ”Google”から”渋谷”をたどる経路を、DFSで探す
 """
 import sys
-sys.setrecursionlimit(1483277) #再起の上限をnodeの個数分に設定する
+sys.setrecursionlimit(100000) #再起の上限を100000回に設定する
 
 id_to_title = {}
 id_to_nextIDs = {}
@@ -27,12 +27,13 @@ def dfs(startID, targetID):
   if startID in id_to_nextIDs: #アクセスできるnodeがあったら
     for nextID in id_to_nextIDs[startID]: #そのnodeを全て見る
       if nextID not in visited: #まだ未探索だったら
-        ans = dfs(nextID, targetID) #再起してさらに深く見ていく
+        try:
+            ans = dfs(nextID, targetID) #再起してさらに深く見ていく
+        except RecursionError : #再起の上限に到達したら
+            return None #それ以上の探索をやめる
         if ans is not None: #ansがNoneではなかったら = 探索先でgoalにたどり着いていたら
           ans.append(startID) #リストに自分を付け加えて返す
           return ans
-  else:
-    return None
 
   return None
 

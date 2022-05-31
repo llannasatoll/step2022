@@ -75,15 +75,13 @@ def search_route(targetID):
     targetID: the ID of the current node
 
   Returns: the path(list) between two points
-
-  Raises: error if the goal isn't in the graph
   """
   if id_to_parentID[targetID] == -1: #-1だったらstart node
     return [targetID]
 
   try:
     ans = search_route(id_to_parentID[targetID])
-  except KeyError:
+  except KeyError: #たどっていって、親nodeがなかったらエラー
     print("ERROR : Can't find the (ID)%s\'s parent node." %targetID)
     exit(1)
   ans.append(targetID)
