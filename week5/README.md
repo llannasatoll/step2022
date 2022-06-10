@@ -13,7 +13,7 @@ https://github.com/hayatoito/google-step-tsp
 [このリポジトリ](https://github.com/llannasatoll/step2022/new/main/week5)にはオリジナルのものだけを入れています。
 <br><br>
 
-## 実装
+## 実装方法
 
 ### (1) 2-opt(solver_2opt.py)
 
@@ -80,7 +80,7 @@ for i in range (N-2):
 今回は **循環交叉(Chromosome.cyclic_crossover())** を採用する。
 
 2つの親から、点の組と位置の組が等しいグループを探し、グループ同士を交換する。
-1. 親1からランダムな都市$a_1$を選択（$a_i = a_1$）。
+1. ランダムな都市$a_1$を選択（$a_i = a_1$）。
 2. 親1から都市$a_i$を探し、その位置をj番目として、親2の$j$番目の都市を$a_{i+1}$とする。
 3. $a_{i+1} = a_1$なら終了。そうでなければ2を繰り返す。
 
