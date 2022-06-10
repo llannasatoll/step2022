@@ -272,6 +272,14 @@ class Log():
         各都市の座標間の距離。
     steps : int
         ログを出力するstep数。
+    printer : int(0, 1)
+        0 -> 標準出力なし
+        1 -> 標準出力あり
+    mode : int(0~2)
+        初期個体群の生成方法
+        0 -> ランダムな経路
+        1 -> greedy
+        2 -> greedy + 2opt
     """
     def __init__(self, cities, dist, steps, printer=0, mode=0):
         self.cities = cities
