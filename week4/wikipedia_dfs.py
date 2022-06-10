@@ -6,7 +6,7 @@ import sys
 sys.setrecursionlimit(100000) #再起の上限を100000回に設定する
 
 id_to_title = {}
-id_to_nextIDs = {}
+id_to_nextIDs = defaultdict(list)
 visited = set() #探索済みnodeを入れる集合
 
 #Depth-First Search
@@ -38,6 +38,27 @@ def dfs(startID, targetID):
   return None
 
 
+def input_page(printword):
+  """
+  Input the page title and return the ID.
+
+  Args:
+    printword: "START" or "GOAL"
+
+  Returns: the page title and the ID
+  """
+  while True:
+    page = input("%s : " %printword)
+    for k, v in id_to_title.items():
+      if page == v:
+        break
+    else:
+      print("The page \"%s\" does not exists." %start)
+      continue
+    break
+  return page, k
+
+
 def main():
   #Set your path.
   pages_data = "data/pages.txt"
@@ -55,34 +76,11 @@ def main():
   with open(links_data) as f:
     for data in f.read().splitlines():
       link = data.split("\t")
-      if link[0] in id_to_nextIDs:
-        id_to_nextIDs[link[0]].add(link[1])
-      else:
-        id_to_nextIDs[link[0]] = {link[1]}
+      id_to_nextIDs[link[0]].append(link[1])
 
-  #Input start word.
-  while True:
-    start = input("START : ")
-    for k, v in id_to_title.items():
-      if start == v:
-        startID = k
-        break
-    else:
-      print("The page \"%s\" does not exists." %start)
-      continue
-    break
-
-  #Input goal word.
-  while True:
-    goal = input("GOAL : ")
-    for k, v in id_to_title.items():
-      if goal == v:
-        targetID = k
-        break
-    else:
-      print("The page \"%s\" does not exists." %goal)
-      continue
-    break
+  # Input start and goal words.
+  start, startID = input_page("START")
+  goal, targetID = input_page("GOAL")
 
   print("Searching path from \"%s\" to \"%s\"" %(start, goal))
   ans = dfs(startID, targetID)
