@@ -13,7 +13,7 @@ https://github.com/hayatoito/google-step-tsp
 [このリポジトリ](https://github.com/llannasatoll/step2022/new/main/week5)にはオリジナルのものだけを入れています。
 <br><br>
 
-## 実装
+## 実装方法
 
 ### (1) 2-opt(solver_2opt.py)
 
@@ -80,11 +80,11 @@ for i in range (N-2):
 今回は **循環交叉(Chromosome.cyclic_crossover())** を採用する。
 
 2つの親から、点の組と位置の組が等しいグループを探し、グループ同士を交換する。
-1. 親1からランダムな都市$a_1$を選択（$a_i = a_1$）。
+1. ランダムな都市$a_1$を選択（$a_i = a_1$）。
 2. 親1から都市$a_i$を探し、その位置をj番目として、親2の$j$番目の都市を$a_{i+1}$とする。
 3. $a_{i+1} = a_1$なら終了。そうでなければ2を繰り返す。
 
-![./img/cyclic_crossover.png](https://github.com/llannasatoll/step2022/blob/main/week5/img/cyclic_crossover.png)
+<img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/cyclic_crossover.png" width="800">
 
 <br>
 
@@ -94,8 +94,9 @@ for i in range (N-2):
 
 今回は **経路の交換（GeneticAlgorithm.swap_mutation（))** を採用する。
 
-![./img/swap_mutation.png](https://github.com/llannasatoll/step2022/blob/main/week5/img/swap_mutation.png)
+<img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/swap_mutation.png" width="800">
 
+<br><br>
 
 ## 結果(myresult/)
 GAの各パラメータ
@@ -106,7 +107,7 @@ GAの各パラメータ
 - 選択方式　　： エリート選択方式(30%)、ルーレット選択方式(70%)
 
 
-|              | N                          | 2opt         | ga(random) | ga(greedy)| ga(greedy+2opt) |  
+|              | N                          | greedy+2opt         | ga(random) | ga(greedy)| ga(greedy+2opt) |  
 |------------- | -------------------------: | -------------------   | ----------    | ----------               | ----------  |
 |Challenge 0   |                          5 |  3418.10              | 3291.62       | 3291.62                  | 3291.62 |
 |Challenge 1   |                          8 | 3832.29               | 3778.72       | 3778.72                  | 3778.72 |
@@ -116,6 +117,31 @@ GAの各パラメータ
 |Challenge 5   |                        512 | 21363.60              | 206831.98     | 24673.01                 |  21169.58 |
 |Challenge 6   |                       2048 | 42712.37              | 1157232.45    | 48405.39                 | 42045.51 |
 
+<br>
+
+### 初期集団生成 : 方法1(ランダム) Chanllenge3
+
+(左から、0世代目、2000世代目、10000世代目)
+
+<img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/random_64_0.png" width="300"><img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/random_64_1.png" width="300"><img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/random_64_5.png" width="300">
+
+
+
+### 初期集団生成 : 方法3(greedy+2opt) Chanllenge3
+
+(左から、0世代目、2000世代目、10000世代目)
+
+<img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/greedy%2B2pot_64_0.png" width="300"><img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/greedy%2B2pot_64_1.png" width="300"><img src="https://github.com/llannasatoll/step2022/blob/main/week5/img/greedy%2B2pot_64_5.png" width="300">
+
+<br><br>
+
+## 考察
+
+初期集団がランダムな経路だと、改善されていく様子がわかりやすかった。しかし、greedy+2optの記録に追いつくまで遺伝を続けていくと、かなりの時間がかかってしまう。
+
+初期集団がgreedy+2optだと、個体数10の中から最短のものが選ばれていくため、最初から適応度が高いため、今回実装した循環交叉や経路交換の突然変異で改善される可能性がかなり低い。
+
+<br><br>
 
 ## 参考結果(sample/)
 
@@ -128,4 +154,11 @@ GAの各パラメータ
 |Challenge 4   |                        128 | 10675.29           | 92719.14      | 12684.06  | 
 |Challenge 5   |                        512 | 21119.55           | 347392.97     | 25331.84  | 
 |Challenge 6   |                       2048 | 44393.89           | 1374393.14    | 49892.05  | 
+
+<br><br>
+
+実装は、以下のページを参考にしました。
+- [遺伝的アルゴリズムで巡回セールスマン問題を解いてみる(理論編)](https://qiita.com/masaru/items/729a0a0e2d7f305e8e90)<br>
+- [Pythonで入門 遺伝的アルゴリズム](https://qiita.com/simonritchie/items/d7f1596e7d034b9422ce)
+
 
