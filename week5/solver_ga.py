@@ -68,7 +68,7 @@ def two_opt(tour, dist):
     N = len(tour)
 
     while True:
-        isChange = False
+        is_change = False
         for i in range (N-2):
             for j in range(i+2, N):
                 l1 = dist[tour[i]][tour[i+1]]
@@ -78,8 +78,8 @@ def two_opt(tour, dist):
                 if l1+l2 > l3+l4:
                     new_solution = tour[i+1:j+1]
                     tour[i+1:j+1] = new_solution[::-1]
-                    isChange = True
-        if not isChange:
+                    is_change = True
+        if not is_change:
             break
 
     return tour
@@ -100,9 +100,9 @@ def solve(cities, mode=0):
     #1. ランダムな経路
     if mode == 0:
         path = list(range(len(cities)))
-        for i in range(population_size):
+        for _ in range(population_size):
             random.shuffle(path)
-            initial_population.append(Chromosome(path))
+            initial_population.append(Chromosome(path.copy()))
 
     #2. ランダムな点から貪欲法を始める
     elif mode == 1:
@@ -131,7 +131,11 @@ def solve(cities, mode=0):
         exit(1)
     
 
-    log = Log(cities, dist, 5, 0, mode)
+    log = Log(
+        cities = cities, 
+        steps = 5,
+        printer = 1,
+        mode = mode)
 
     ga = GeneticAlgorithm(
         initial_population = initial_population,
@@ -139,6 +143,7 @@ def solve(cities, mode=0):
         crossover_probability = 0.9,
         mutation_probability = 0.2,
         elite_selection_rate = 0.3,
+        dist = dist,
         log = log)
     best_path = ga.run_algorithm()
 
@@ -146,5 +151,5 @@ def solve(cities, mode=0):
 
 if __name__ == "__main__":
     assert len(sys.argv) > 1
-    tour = solve(read_input(sys.argv[1]))
+    tour = solve(read_input(sys.argv[1]), 0)
     print_tour(tour)

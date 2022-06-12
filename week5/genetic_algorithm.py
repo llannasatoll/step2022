@@ -18,6 +18,8 @@ class GeneticAlgorithm:
         変異確率（0.0～1.0）。
     elite_selection_rate : float
         エリート選択方式で選ばれる個体の割合（0.0～1.0）。
+    dist : list
+        各都市の座標間の距離。
     log : Log(自作class)
         ログ用に結果を残しておくインスタンス変数。
 
@@ -33,12 +35,14 @@ class GeneticAlgorithm:
         crossover_probability,
         mutation_probability,
         elite_selection_rate,
+        dist,
         log):
 
         self._population = initial_population
         self._max_generations = max_generations
         self._crossover_probability = crossover_probability
         self._mutation_probability = mutation_probability
+        self.dist = dist
         self.log = log
 
         self.nelites = int(len(self._population)*elite_selection_rate)
@@ -59,12 +63,12 @@ class GeneticAlgorithm:
 
         #エリート選択方式
         #世代の中で経路が短かった上位の個体
-        selected_chromosomes.extend(sorted(self._population, key=lambda x: x.get_path_length(self.log.dist))[:self.nelites])
+        selected_chromosomes.extend(sorted(self._population, key=lambda x: x.get_path_length(self.dist))[:self.nelites])
         
         #ルーレット選択方式
         #経路の長さに反比例する重みが設定された状態で、ランダムに抽出された個体。
         #(経路が短い方が重みが大きく、長い方が小さくする)
-        weights = [1.0 / chromosome.get_path_length(self.log.dist) for chromosome in self._population]
+        weights = [1.0 / chromosome.get_path_length(self.dist) for chromosome in self._population]
         n = len(self._population) - self.nelites
         selected_chromosomes.extend(random.choices(self._population, weights=weights, k=n))
 
@@ -89,14 +93,15 @@ class GeneticAlgorithm:
                 new_population.remove(child)
 
         #シャッフルして前から2つずつを親として交叉させる
-        #奇数の場合は、残り一つは交叉せずそのまま引き継がれる
         i = 1
         random.shuffle(crossovers_chromosomes)
         while i < len(crossovers_chromosomes):
             new_population.extend(crossovers_chromosomes[i-1].cyclic_crossover(crossovers_chromosomes[i]))
             i += 2
-
-        return new_population
+        
+        #奇数の場合、余ってしまった残り一つは交叉せずそのまま引き継がれる
+        if i == len(crossovers_chromosomes):
+            new_population.append(crossovers_chromosomes[-1])
 
 
     def mutate(self, new_population):
@@ -118,12 +123,11 @@ class GeneticAlgorithm:
         次世代の個体を生成し、個体群を、生成した次世代の個体群で置換する。
         """
 
-        new_population = []
         new_population = self.selection() #選択
-        new_population = self.crossover(new_population) #交叉
-        new_population = self.mutate(new_population) #突然変異
+        self.crossover(new_population) #交叉
+        self.mutate(new_population) #突然変異
 
-        _population = new_population
+        self._population = new_population
 
 
     def run_algorithm(self):
@@ -139,7 +143,7 @@ class GeneticAlgorithm:
             
             #ログ用
             if not generation_idx % (self._max_generations//self.log.steps):
-                self.log.save_path(generation_idx, self.best_chromosome.path, self.best_chromosome.get_path_length(self.log.dist))
+                self.log.save_path(generation_idx, self.best_chromosome.path, self.best_chromosome.get_path_length(self.dist))
 
             best = copy.copy(self.best_chromosome)
 
@@ -147,12 +151,12 @@ class GeneticAlgorithm:
             self.best_chromosome = self._get_best_chromosome_from_population()
 
             #今までで一番良い個体は必ず次世代へ引き継ぐ
-            if self.best_chromosome.get_path_length(self.log.dist) > best.get_path_length(self.log.dist):
+            if self.best_chromosome.get_path_length(self.dist) > best.get_path_length(self.dist):
                 self._population.remove(self.best_chromosome)
                 self._population.append(best)
                 self.best_chromosome = best
 
-        self.log.save_path(generation_idx+1, self.best_chromosome.path, self.best_chromosome.get_path_length(self.log.dist))
+        self.log.save_path(generation_idx+1, self.best_chromosome.path, self.best_chromosome.get_path_length(self.dist))
 
         return self.best_chromosome.path
     
@@ -165,17 +169,7 @@ class GeneticAlgorithm:
         -------
             リスト内の経路が一番短い個体。
         """
-
-        best_chromosome = self._population[0]
-        shotest = self._population[0].get_path_length(self.log.dist)
-
-        for chromosome in self._population:
-            tmp = chromosome.get_path_length(self.log.dist)
-            if tmp < shotest:
-                best_chromosome = chromosome
-                shotest = tmp
-
-        return best_chromosome
+        return min(self._population, key=lambda x: x.get_path_length(self.dist))
 
 
 class Chromosome:
@@ -268,8 +262,6 @@ class Log():
     ----------
     cities : list
         各都市の座標。
-    dist : list
-        各都市の座標間の距離。
     steps : int
         ログを出力するstep数。
     printer : int(0, 1)
@@ -281,9 +273,8 @@ class Log():
         1 -> greedy
         2 -> greedy + 2opt
     """
-    def __init__(self, cities, dist, steps, printer=0, mode=0):
+    def __init__(self, cities, steps, printer=0, mode=0):
         self.cities = cities
-        self.dist = dist
         self.steps = steps
         self.index = 0
         self.printer = printer
