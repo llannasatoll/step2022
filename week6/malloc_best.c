@@ -1,5 +1,7 @@
-//
+// 
+// step2022 -week6-
 // >>>> malloc challenge! <<<<
+// 1. Best Fit mallocを実装する。
 //
 // Your task is to improve utilization and speed of the following malloc
 // implementation.
@@ -81,7 +83,7 @@ void *my_malloc(size_t size) {
   // TODO: Update this logic to Best-fit!
 
   // 変更した部分
-  // ------------------------ここから------------------------
+  // ------------------------ ここから ------------------------
 
   my_metadata_t *best_prev = NULL;
   my_metadata_t *best_metadata = NULL;
@@ -102,7 +104,7 @@ void *my_malloc(size_t size) {
   prev = best_prev;
   metadata = best_metadata;
 
-  // ------------------------ここまで------------------------
+  // ------------------------ ここまで ------------------------
 
   // now, metadata points to the first free slot
   // and prev is the previous entry.

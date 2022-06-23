@@ -1,10 +1,8 @@
-//
+// 
+// step2022 -week6-
 // >>>> malloc challenge! <<<<
+// 2. freelist binを実装する。
 //
-// Your task is to improve utilization and speed of the following malloc
-// implementation.
-// Initial implementation is the same as the one implemented in simple_malloc.c.
-// For the detailed explanation, please refer to simple_malloc.c.
 
 #include <assert.h>
 #include <stdbool.h>
@@ -189,21 +187,6 @@ void my_free(void *ptr) {
 
 // This is called at the end of each challenge.
 void my_finalize() {
-  /*
-  int counter = 0;
-  int i = 0;
-  my_metadata_t *metadata;
-  while(i < num_list){
-    counter = 0;
-    metadata = my_heap[i].free_head;
-    while(!metadata){
-      metadata = metadata->next;
-      counter ++;
-    }
-    printf("my_heap[%i] : %d\n", i, counter);
-    i ++;
-  }
-  */
 }
 
 void test() {
