@@ -19,11 +19,10 @@
 ```C
 while (metadata) { //空き領域リストを最後まで見る
 
-  //best空き容量よりも小さい、かつ、mallocしたいsizeよりも大きかったら、bestを更新
-  if(best_metadata_size > metadata->size && metadata->size >= size){
+  //最も良い領域を入れるbest_metadataが空、もしくは、best_metadataの大きさよりも適切な大きさの領域があったら
+  if((!best_metadata || metadata->size < best_metadata->size) && metadata->size >= size){
     best_prev = prev;
     best_metadata = metadata;
-    best_metadata_size = metadata->size;
   }
 }
 ```
