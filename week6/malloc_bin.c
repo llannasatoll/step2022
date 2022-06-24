@@ -116,7 +116,6 @@ void *my_malloc(size_t size) {
   my_metadata_t *prev;
   my_metadata_t *best_prev;
   my_metadata_t *best_metadata;
-  size_t best_metadata_size;
 
   while(i < num_list){
     //変数の初期化
@@ -124,15 +123,13 @@ void *my_malloc(size_t size) {
     prev = NULL;
     best_prev = NULL;
     best_metadata = NULL;
-    best_metadata_size = SIZE_MAX;
 
     while (metadata) { //i番目の空き領域リストを最後まで見る
 
       //best空き容量よりも小さい、かつ、mallocしたいsizeよりも大きかったら、bestを更新
-      if(best_metadata_size > metadata->size && metadata->size >= size){
+      if((!best_metadata || metadata->size < best_metadata->size) && metadata->size >= size){
         best_prev = prev;
         best_metadata = metadata;
-        best_metadata_size = metadata->size;
       }
       prev = metadata;
       metadata = metadata->next;

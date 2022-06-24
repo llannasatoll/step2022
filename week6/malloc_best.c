@@ -87,18 +87,15 @@ void *my_malloc(size_t size) {
 
   my_metadata_t *best_prev = NULL;
   my_metadata_t *best_metadata = NULL;
-  size_t best_metadata_size = SIZE_MAX; //設定できる最大の値にする
 
   while (metadata) { //空き領域リストを最後まで見る
 
-    if(best_metadata_size > metadata->size && metadata->size >= size){
+    if((!best_metadata || metadata->size < best_metadata->size) && metadata->size >= size){
       best_prev = prev;
       best_metadata = metadata;
-      best_metadata_size = metadata->size;
     }
     prev = metadata;
     metadata = metadata->next;
-
   }
 
   prev = best_prev;
