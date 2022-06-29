@@ -2,12 +2,10 @@
  * Google STEP Class 7 Homework
  * 〜帰ってきたTSP Challenge〜
  * 
- * Method 1: Greedy + 2-opt
- * Method 2: Greedy + 3-opt
- * Method 3: Genetic Algorithm
+ * Method 1: Greedy + 3-opt
  * 
  * 実行方法：
- * g++ -o solver_ga solver_ga.cpp common.cpp genetic_algorithm.cpp
+ * g++ -o solver_3opt solver_3opt.cpp common.cpp
  * ./solver_ga
  */
 

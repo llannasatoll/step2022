@@ -2,7 +2,6 @@
  * Google STEP Class 7 Homework
  * 〜帰ってきたTSP Challenge〜
  * 
- * Method 1: Greedy + 3-opt + 2-opt
  * Method 2: Genetic Algorithm
  * 
  * 実行方法：
