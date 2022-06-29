@@ -4,13 +4,19 @@
 
 ### 実行方法
 
-`g++ -o solver_dfs solver_dfs.cpp`
+```
+g++ -o solver_dfs solver_dfs.cpp
+```
 
-`./solver_dfs`
+```
+./solver_dfs
+```
  
  その後、
  
- `Challenge number(0~7): `
+ ```
+ Challenge number(0~7): 
+ ```
  
  と出力されるので、*0~7*の数字を入力する。
 
