@@ -1,8 +1,6 @@
-# Google STEP Class 2 Homework
+# Google STEP Class 7 Homework
 
-## 課題内容
-
-#### 1. matrix.cpp
+## 課題1
 以下のような行列積を求めるループ順序としては6種類の組合せがある。この6種類を実行速度が速いと思う方から順に並べてください。実際に実験してその予想が正しいかどうか確かめてください。
 
 - i-j-k, i-k-j, j-i-k, j-k-i, k-i-j, k-j-i
@@ -14,38 +12,85 @@ for (i = 0; i < n; i++)
             c[i][j] += a[i][k] * b[k][j];
 ```
 
-#### 3. solver_ga.cpp
+### 実行方法
+
+ファイル:matrix/matrix.cpp
+
+```
+% g++ -o martix matrix.cpp
+```
+
+```
+% ./matrix N
+```
+
+(Nは行列サイズ)
+<br>
+<br>
+
+## 課題3
 これまでの7回の授業で学んできたことを総合して、TSP Challengeのプログラムを最適化して、Challenge 6（都市数＝2048）のベストスコア更新とChallenge 7（都市数＝8192）のベストスコアを目指す！！
 
-## 結果
+<br>
 
-% ./matrix 3000
-j-k-i time: 127 sec
-j-k-i time: 64 sec
-j-k-i time: 162 sec
-j-k-i time: 257 sec
-j-k-i time: 67 sec
-j-k-i time: 255 sec
-sum: 3280499392500009457942528.00000
+## 1. 3-opt
 
-3opt
-0 3289
-1 3775
-2 4486
-3 8243
-4 10601
-5 20323
-6
-7
+<img src="https://github.com/llannasatoll/step2022/blob/main/week7/img/3-opt.png" width="800">
 
-challenge 7
-78021.000000
+これは[week5](https://github.com/llannasatoll/step2022/tree/main/week5)での(1)2-optを包含している。
 
-ga
-0 3289
-1 3775
-2 4656
-3 21958
-4 50285
-5 300964
-6
+貪欲法（greedy）で初期経路を求め、3-optで最適化を行う。
+
+今回は10回繰り返し、最も距離が短かった経路をファイルに出力する。(Challenge 7は1回)
+ここで、貪欲法を始める点は、直前に求めた経路の中で最も長い辺を構成する点とする。
+
+
+### 実行方法
+
+ファイル：solver_3opt.cpp
+```
+% g++ -o solver_3opt solver_3opt.cpp common.cpp
+```
+```
+% ./solver_3opt [inputfile]
+```
+出力：3opt_(都市数).csv
+
+
+### 実行結果
+
+| Challenge 0 | Challenge 1 | Challenge 2 | Challenge 3 | Challenge 4 | Challenge 5 | Challenge 6 | Challenge 7 | 
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|3289|3775|4486|8243|10601|20323|39819|78021|
+
+<br>
+
+## 2. Genetic Algotrithm
+
+詳しい実装方法は[week5](https://github.com/llannasatoll/step2022/tree/main/week5)。
+
+今回は、初期個体群はランダムに生成を行う。
+
+### 実行方法
+ファイル：solver_ga.cpp
+```
+% g++ -o solver_ga solver_ga.cpp common.cpp genetic_algorithm.cpp
+```
+```
+% ./solver_ga [inputfile]
+```
+出力：ga_(都市数).csv
+
+
+### 実行結果
+
+各パラメータ
+- 世代数　　　: 10000
+- 個体数　　　: 20
+- 交叉率　　　: 0.8
+- 突然変異率　: 0.3
+- 選択方式　　： エリート選択方式(30%)、ルーレット選択方式(70%)
+
+| Challenge 0 | Challenge 1 | Challenge 2 | Challenge 3 | Challenge 4 | Challenge 5 | Challenge 6 | Challenge 7 | 
+|-------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
+|3289|3775|4656|21958|50285|267937|||
