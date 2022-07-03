@@ -33,9 +33,6 @@ for (i = 0; i < n; i++)
 
 <br>
 
-
-<br>
-
 ## 1. Genetic Algotrithm
 
 詳しい実装方法は[week5](https://github.com/llannasatoll/step2022/tree/main/week5)。
@@ -52,7 +49,7 @@ for (i = 0; i < n; i++)
 ```
 出力：ga_(都市数).csv
 
-
+<br>
 
 ## 2. 3-opt
 
