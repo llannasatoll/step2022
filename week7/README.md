@@ -17,7 +17,7 @@ for (i = 0; i < n; i++)
 ファイル:matrix/matrix.cpp
 
 ```
-% g++ -o martix matrix.cpp
+% g++ -o martix matrix.cpp -std=c++11
 ```
 
 ```
@@ -33,7 +33,28 @@ for (i = 0; i < n; i++)
 
 <br>
 
-## 1. 3-opt
+
+<br>
+
+## 1. Genetic Algotrithm
+
+詳しい実装方法は[week5](https://github.com/llannasatoll/step2022/tree/main/week5)。
+
+今回は、初期個体群はランダムに生成を行う。
+
+### 実行方法
+ファイル：solver_ga.cpp
+```
+% g++ -o solver_ga solver_ga.cpp common.cpp genetic_algorithm.cpp
+```
+```
+% ./solver_ga [inputfile]
+```
+出力：ga_(都市数).csv
+
+
+
+## 2. 3-opt
 
 <img src="https://github.com/llannasatoll/step2022/blob/main/week7/img/3-opt.png" width="800">
 
@@ -62,31 +83,3 @@ for (i = 0; i < n; i++)
 | Challenge 0 | Challenge 1 | Challenge 2 | Challenge 3 | Challenge 4 | Challenge 5 | Challenge 6 | Challenge 7 | 
 |-------------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
 |3291.62|3778.72|4494.42|8274.17|10664.9|20575.8|40819.9| 82115.9|
-
-<br>
-
-## 2. Genetic Algotrithm
-
-詳しい実装方法は[week5](https://github.com/llannasatoll/step2022/tree/main/week5)。
-
-今回は、初期個体群はランダムに生成を行う。
-
-### 実行方法
-ファイル：solver_ga.cpp
-```
-% g++ -o solver_ga solver_ga.cpp common.cpp genetic_algorithm.cpp
-```
-```
-% ./solver_ga [inputfile]
-```
-出力：ga_(都市数).csv
-
-
-### 実行結果
-
-各パラメータ
-- 世代数　　　: 10000
-- 個体数　　　: 20
-- 交叉率　　　: 0.8
-- 突然変異率　: 0.3
-- 選択方式　　： エリート選択方式(30%)、ルーレット選択方式(70%)
