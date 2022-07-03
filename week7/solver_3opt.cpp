@@ -6,7 +6,7 @@
  * 
  * 実行方法：
  * g++ -o solver_3opt solver_3opt.cpp common.cpp
- * ./solver_ga
+ * ./solver_3opt
  */
 
 #include <iostream>
@@ -188,11 +188,11 @@ vector<int> three_opt(vector<int> tour,  vector<vector<double> > dist){
  */
 void solve(vector<City> cities){
 
-    int population_size = 10; // 生成する経路の数
+    int population_size = 1; // 生成する経路の数
 
     vector<vector<double> > dist = make_dist(cities);
     vector<int> best_path, tmp_path;
-    int best_length = INT_MAX, tmp_length = 0;
+    float best_length = INT_MAX, tmp_length = 0;
 
     int init_city = rand()%N; // 最初の始点はランダムで決める
 

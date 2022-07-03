@@ -135,7 +135,10 @@ vector<Chromosome> GeneticAlgorithm::selection(){
             if(this->population[j].length < min.length) min = this->population[j];
             j++;
         }
+
+        //この文エラーが出ている、、、、
         this->population.erase(min);
+        
         selected_chromosomes.push_back(min);
     }
 
@@ -217,7 +220,7 @@ vector<int> GeneticAlgorithm::run_alorithm(){
         for(auto c: this->population){ // 最も総距離が短かった個体をbestとする
             if(c.length < best.length) best = c;
         }
-        if(!(i%100)) print_info(i, best.length);
+        if(!(i%10)) print_info(i, best.length);
         this->next_generation(); // 世代交代
         this->population.pop_back(); // bestが入るように末尾の個体削除
         this->population.push_back(best); // 前世代のbest個体を追加

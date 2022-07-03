@@ -6,7 +6,7 @@
  * 実際に実験してその予想が正しいかどうか確かめてください。
  * 
  * 実行方法：
- * g++ -o martix matrix.cpp
+ * g++ -o martix matrix.cpp -std=c++11
  * ./matrix N
  */
 
@@ -32,14 +32,14 @@ int main(int argc, char *argv[]){
     int i, j, k;
     clock_t begin, end;
     vector<double> times;
-    vector<string> loops = {"i-j-k", "i-k-j", "j-i-k", "j-i-k", "j-k-i", "k-j-i"};
+    vector<string> loops = {"i-j-k", "i-k-j", "j-i-k", "j-k-i", "k-i-j", "k-j-i"};
 
     // Initialize the matrices to some values.
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
-        a[i * n + j] = i * n + j; // A[i][j]
-        b[i * n + j] = j * n + i; // B[i][j]
-        c[i * n + j] = 0; // C[i][j]
+            a[i * n + j] = i * n + j; // A[i][j]
+            b[i * n + j] = j * n + i; // B[i][j]
+            c[i * n + j] = 0; // C[i][j]
         }
     }
 
